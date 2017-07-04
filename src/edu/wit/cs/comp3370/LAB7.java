@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Wentworth Institute of Technology
  * COMP 3370
  * Lab Assignment 7
- * 
+ * Rachel Palmer
  */
 
 public class LAB7 {
@@ -18,9 +18,81 @@ public class LAB7 {
 	//TODO Document this method
 	public static String[] findLCSdyn(String text1, String text2) {
 		// TODO Implement this method
-		
-		// TODO set static var "longest" to longest common subsequence length
-		return new String[]{"", ""};
+		int m = text1.length()+1;
+		int n = text2.length()+1;
+		int[][] c = new int[m][n];
+		int[][] b = new int[m][n];
+		String[] alignment = new String[]{"",""};
+		for(int i=0;i<m;i++){
+			c[i][0] = 0;
+		}
+		for(int j=0;j<n;j++){
+			c[0][j] = 0;
+		}
+		for(int i=1;i<m;i++){
+			for(int j=1;j<n;j++){
+				if(text1.charAt(i-1)==text2.charAt(j-1)){
+					c[i][j] = c[i-1][j-1] + 1;
+					b[i][j] = 'd'; //d for diagonal
+				}
+				else if(c[i-1][j] >= c[i][j-1]){
+					c[i][j] = c[i-1][j];
+					b[i][j] = 'u'; //u for up
+				}
+				else{
+					c[i][j] = c[i][j-1];
+					b[i][j] = 'l'; //l for left
+				}
+			}
+		}
+		longest = c[m-1][n-1];
+		print(b,alignment,text1,text2,m-1,n-1);
+		StringBuffer a0 = new StringBuffer(alignment[0]);
+	    a0.reverse();
+	    alignment[0] = a0.toString();
+	    StringBuffer a1 = new StringBuffer(alignment[1]);
+	    a1.reverse();
+	    alignment[1] = a1.toString();
+		return alignment;
+	}
+	
+	public static void print(int b[][], String[] alignment, String text1, String text2, int i, int j){
+		while(i>=0 && j>=0){
+			if(i==0){
+				while(j!=0){
+					alignment[0] += '-';
+					alignment[1] += text2.charAt(j-1);
+					j--;
+				}
+				return;
+			}
+			else if(j==0){
+				while(i!=0){
+					alignment[0] += text1.charAt(i-1);
+					alignment[1] += '-';
+					i--;
+				}
+				return;
+			}
+			else{
+				if(b[i][j] == 'd'){
+					alignment[0] += text1.charAt(i-1);
+					alignment[1] += text2.charAt(j-1);
+					i--;
+					j--;
+				}
+				else if(b[i][j] == 'u'){
+					alignment[0] += text1.charAt(i-1);
+					alignment[1] += '-';
+					i--;
+				}
+				else{
+					alignment[0] += '-';
+					alignment[1] += text2.charAt(j-1);
+					j--;
+				}
+			}
+		}
 	}
 	
 	/********************************************
