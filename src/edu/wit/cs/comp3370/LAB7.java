@@ -15,10 +15,28 @@ import java.util.Scanner;
 
 public class LAB7 {
 	
-	//TODO Document this method
+	/**
+	 * findLCSdyn uses a matrix of m by n size, where m is the length of text1 and n is the
+	 * length of text2. A separate matrix, b, is used to store the values of diagonal, up, or
+	 * left which indicate where the current value was obtained from. If the two values in
+	 * the separate strings are equal, it takes the diagonal value and adds 1, otherwise the
+	 * current value is whichever adjacent value is larger, either up or left (if they are equal,
+	 * then it takes the value above). The LCS is taken from the bottom right corner of the matrix.
+	 * Next, the subsequence is visualized using the method print, which takes the b value, an
+	 * array of two strings, and the two text inputs. This cycles through the table and adds
+	 * characters to the two strings in the array. If the values are equal (current b is diagonal),
+	 * then the char at the respected positions in the texts are added to the two strings, at 
+	 * equal position. If the two characters do not match, then depending on whether b is u or
+	 * l, a '-' character will be added to one string, and a char from the original string is
+	 * added to the other. Finally, the strings in the array are reversed since print starts
+	 * from the highest value in the texts and goes down.
+	 * 
+	 * @param text1		one input string
+	 * @param text2		second input string
+	 * @return			String of size 2 is returned
+	 */
 	public static String[] findLCSdyn(String text1, String text2) {
-		// TODO Implement this method
-		int m = text1.length()+1;
+		int m = text1.length()+1; //+1 to account for row of 0s
 		int n = text2.length()+1;
 		int[][] c = new int[m][n];
 		int[][] b = new int[m][n];
@@ -46,7 +64,7 @@ public class LAB7 {
 			}
 		}
 		longest = c[m-1][n-1];
-		print(b,alignment,text1,text2,m-1,n-1);
+		print(b,alignment,text1,text2);
 		StringBuffer a0 = new StringBuffer(alignment[0]);
 	    a0.reverse();
 	    alignment[0] = a0.toString();
@@ -56,9 +74,11 @@ public class LAB7 {
 		return alignment;
 	}
 	
-	public static void print(int b[][], String[] alignment, String text1, String text2, int i, int j){
+	public static void print(int b[][], String[] alignment, String text1, String text2){
+		int i = text1.length();
+		int j = text2.length();
 		while(i>=0 && j>=0){
-			if(i==0){
+			if(i==0){ //if i is 0 and j isnt, then chars need to be added to a[1]
 				while(j!=0){
 					alignment[0] += '-';
 					alignment[1] += text2.charAt(j-1);
